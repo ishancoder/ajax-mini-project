@@ -21,11 +21,34 @@ function loadData() {
     } else {
         var address = street || city;
     }
-    var image_url = "https://maps.googleapis.com/maps/api/streetview?size=600x300&location="+address;
+
+
+    var image_url = "https://maps.googleapis.com/maps/api/streetview?size=600x400&location="+address;
     console.log(image_url);
 
-    $("body").append("<img class='bgimg' id='bk-ground' src='"+image_url+"'/>");
+    $greeting.text("You live at " + address + "?");
+
+    $("body").append("<img class='bgimg' id='bk-ground'\
+        src='"+image_url+"'/>");
     // YOUR CODE GOES HERE!
+
+    //Code for JSONP Request on mediawiki api
+    var wikiurl = "https://en.wikipedia.org/w/api.php?action=opensearch&search="+city+"&format=json";
+
+    var wikiresp = $.ajax(wikiurl,
+        {"dataType":"jsonp",
+         "success":function(data){
+            var header = $("#wikipedia-header");
+            header.text("Articles From" + data[0]);
+
+            console.log(data[1]);
+            console.log(data[2]);
+
+            for (each in data[1]){
+                $("#wikipedia-links").append("<li><a href="+data[3][each]+">"+data[1][each]+"</a></li>");
+            }
+            
+         }});
 
     return false;
 };
